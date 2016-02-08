@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeProject;
+namespace CodeProject\Entities;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
