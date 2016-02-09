@@ -8,7 +8,6 @@ class User extends Authenticatable
 {
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -17,10 +16,14 @@ class User extends Authenticatable
 
     /**
      * The attributes excluded from the model's JSON form.
-     *
      * @var array
      */
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_members', 'member_id', 'project_id');
+    }
 }
