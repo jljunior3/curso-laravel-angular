@@ -28,7 +28,8 @@ class ProjectController extends Controller
 
     public function index()
     {
-        return $this->repository->findWhere(['owner_id' => $this->getOwnerId()]);
+        return $this->repository->with(['owner'])->all();
+        //return $this->repository->findWhere(['owner_id' => $this->getOwnerId()]);
     }
 
     public function store(Request $request)
@@ -70,12 +71,12 @@ class ProjectController extends Controller
 
     private function checkProjectOwner($projectId)
     {
-        return $this->repository->isOwner($projectId, $this->getOwnerId());
+        return $this->repository->skipPresenter()->isOwner($projectId, $this->getOwnerId());
     }
 
     private function checkProjectMember($projectId)
     {
-        return $this->repository->hasMember($projectId, $this->getOwnerId());
+        return $this->repository->skipPresenter()->hasMember($projectId, $this->getOwnerId());
     }
 
     private function checkProjectPermissions($projectId)

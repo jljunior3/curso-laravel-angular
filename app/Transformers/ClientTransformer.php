@@ -2,16 +2,24 @@
 
 namespace CodeProject\Transformers;
 
-use CodeProject\Entities\User;
+use CodeProject\Entities\Client;
 use League\Fractal\TransformerAbstract;
 
 class ClientTransformer extends TransformerAbstract
 {
-    public function transform(User $client)
+    /**
+     * @param Client $client
+     * @return array
+     */
+    public function transform(Client $client)
     {
         return [
-            'client_id' => $client->id,
-            'name' => $client->name
+            'name' => $client->name,
+            'responsible' => $client->responsible,
+            'email' => $client->email,
+            'phone' => $client->phone,
+            'address' => $client->address,
+            'obs' => $client->obs
         ];
     }
 }

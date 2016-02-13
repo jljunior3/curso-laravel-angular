@@ -20,11 +20,33 @@ class Project extends Model implements Transformable
         'due_date'
     ];
 
+    /**
+     * @return HasMany
+     */
     public function notes()
     {
         return $this->hasMany(ProjectNote::class);
     }
 
+    /**
+     * @return HasOne
+     */
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function owner()
+    {
+        return $this->hasOne(User::class, 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
     public function members()
     {
         return $this->belongsToMany(User::class, 'project_members', 'project_id', 'member_id');

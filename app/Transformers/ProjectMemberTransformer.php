@@ -7,6 +7,10 @@ use League\Fractal\TransformerAbstract;
 
 class ProjectMemberTransformer extends TransformerAbstract
 {
+    /**
+     * @param User $member
+     * @return array
+     */
     public function transform(User $member)
     {
         return [
