@@ -21,11 +21,9 @@ Route::post('oauth/access_token', function () {
 
 Route::group(['middleware' => 'oauth'], function () {
 
-    Route::put('client/{id}', 'ClientController@update');
+    Route::resource('client', 'ClientController', ['except' => ['create', 'edit']]);
 
-    //Route::resource('client', 'ClientController', ['except' => ['create', 'edit']]);
-
-    //Route::group(['middleware' => 'CheckProjectOwner'], function() {
+    //Route::group(['middleware' => 'CheckProjectOwner'], function() {});
     Route::resource('project', 'ProjectController', ['except' => ['create', 'edit']]);
 
     Route::group(['prefix' => 'project'], function () {
@@ -34,6 +32,8 @@ Route::group(['middleware' => 'oauth'], function () {
         Route::get('{id}/note/{noteId}', 'ProjectNoteController@show');
         Route::put('{id}/note/{noteId}', 'ProjectNoteController@update');
         Route::delete('{id}/note/{noteId}', 'ProjectNoteController@destroy');
+
+        Route::post('{id}/file', 'ProjectFileController@store');
     });
 });
 

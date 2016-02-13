@@ -2,20 +2,16 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Presenters\ProjectPresenter;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Services\ProjectService;
 use Illuminate\Http\Request;
 
-//use LucaDegasperi\OAuth2Server\Facades\Authorizer;
-
-class ProjectController extends Controller
+class ProjectFileController extends Controller
 {
     /**
      * @var ProjectRepository
      */
     private $repository;
-    private $repositoryPresenter;
 
     /**
      * @var ProjectService
@@ -25,19 +21,27 @@ class ProjectController extends Controller
     public function __construct(ProjectRepository $repository, ProjectService $service)
     {
         $this->repository = $repository;
-        $this->repositoryPresenter = $repository->setPresenter(ProjectPresenter::class);
         $this->service = $service;
     }
 
     public function index()
     {
         //return $this->repository->with(['owner'])->all();
-        return $this->repositoryPresenter->findWhere(['owner_id' => $this->getOwnerId()]);
+        return $this->repository->findWhere(['owner_id' => $this->getOwnerId()]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        return $this->service->create($request->all());
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+
+        $this->service->createFile([
+            'project_id' => $id,
+            'file' => $file,
+            'extension' => $extension,
+            'name' => $request->name,
+            'description' => $request->description
+        ]);
     }
 
     public function show($id)
@@ -46,7 +50,7 @@ class ProjectController extends Controller
             return ['error' => 'Access Forbidden'];
         }
 
-        return $this->repositoryPresenter->find($id);
+        return $this->repository->find($id);
     }
 
     public function update(Request $request, $id)
