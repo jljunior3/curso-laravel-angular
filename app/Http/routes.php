@@ -19,7 +19,7 @@ Route::post('oauth/access_token', function () {
     return Response::json(Authorizer::issueAccessToken());
 });
 
-Route::group(['middleware' => 'oauth'], function () {
+//Route::group(['middleware' => 'oauth'], function () {
 
     Route::resource('client', 'ClientController', ['except' => ['create', 'edit']]);
 
@@ -35,7 +35,7 @@ Route::group(['middleware' => 'oauth'], function () {
 
         Route::post('{id}/file', 'ProjectFileController@store');
     });
-});
+//});
 
 
 /*
