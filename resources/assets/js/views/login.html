@@ -4,16 +4,10 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
-                    <!--@if (count($errors) > 0)-->
-                    <!--<div class="alert alert-danger">-->
-                        <!--<strong>Whoops!</strong> There were some problems with your input.<br><br>-->
-                        <!--<ul>-->
-                            <!--@foreach ($errors->all() as $error)-->
-                            <!--<li>{{ $error }}</li>-->
-                            <!--@endforeach-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                    <!--@endif-->
+                    <div class="alert alert-danger" ng-show="error.error">
+                        <strong>Whoops!</strong> Ocorrem erros.<br><br>
+                        <div>{{ error.message }}</div>
+                    </div>
 
                     <form class="form-horizontal" name="form" method="POST" ng-submit="login()">
                         <div class="form-group" ng-class="{'has-error': !form.username.$valid && form.username.$touched}">
@@ -38,7 +32,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary" ng-atrr="{disabled: !form.$valid}">Login</button>
+                                <button type="submit" class="btn btn-primary">Login</button>
                             </div>
                         </div>
                     </form>

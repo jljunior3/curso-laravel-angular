@@ -37,7 +37,7 @@
 
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/') }}">Welcome</a></li>
+                    <li><a ng-href="#/clients">Clientes</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -79,8 +79,16 @@
         <script src="{{ asset('build/js/vendor/angular-oauth2.min.js') }}"></script>
 
         <script src="{{ asset('build/js/app.js') }}"></script>
+
+        <!-- CONTROLLERS -->
         <script src="{{ asset('build/js/controllers/login.js') }}"></script>
         <script src="{{ asset('build/js/controllers/home.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/client/clientList.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/client/clientNew.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/client/clientEdit.js') }}"></script>
+
+        <!-- SERVICES -->
+        <script src="{{ asset('build/js/services/client.js') }}"></script>
     @else
         <script src="{{ elixir('js/all.js') }}"></script>
     @endif
