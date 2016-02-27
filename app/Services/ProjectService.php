@@ -42,9 +42,7 @@ class ProjectService
     {
         try {
             $this->validator->with($data)->passesOrFail();
-
             return $this->repository->create($data);
-
         } catch (ValidatorException $e) {
             return [
                 'error' => true,
@@ -57,9 +55,8 @@ class ProjectService
     {
         try {
             $this->validator->with($data)->passesOrFail();
-
-            return $this->repository->update($data, $id);
-
+            $this->repository->find($id) && $this->repository->update($data, $id);
+            return ['status' => 'success', 'message' => 'Projeto atualizado com sucesso!'];
         } catch (ValidatorException $e) {
             return [
                 'error' => true,

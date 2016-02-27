@@ -5,6 +5,8 @@ namespace CodeProject\Http\Controllers;
 use CodeProject\Presenters\ProjectPresenter;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Services\ProjectService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
@@ -46,7 +48,11 @@ class ProjectController extends Controller
             return ['error' => 'Access Forbidden'];
         }
 
-        return $this->repositoryPresenter->find($id);
+        try {
+            return $this->repositoryPresenter->find($id);
+        } catch (ModelNotFoundException $e) {
+            return ['status' => 'error', 'message' => 'Projeto não encontrado.'];
+        }
     }
 
     public function update(Request $request, $id)
@@ -55,7 +61,11 @@ class ProjectController extends Controller
             return ['error' => 'Access Forbidden'];
         }
 
-        return $this->service->update($request->all(), $id);
+        try {
+            return $this->service->update($request->all(), $id);
+        } catch (ModelNotFoundException $e) {
+            return ['status' => 'error', 'message' => 'Projeto não encontrado.'];
+        }
     }
 
     public function destroy($id)
@@ -64,7 +74,16 @@ class ProjectController extends Controller
             return ['error' => 'Access Forbidden'];
         }
 
-        $this->repository->delete($id);
+        try {
+            $this->repository->delete($id);
+            return ['status' => 'success', 'message' => 'Projeto deletado com sucesso!'];
+        } catch (ModelNotFoundException $e) {
+            return ['status' => 'error', 'message' => 'Projeto não encontrado.'];
+        } catch (QueryException $e) {
+            return ['status' => 'error', 'message' => 'Este projeto não pode ser apagado, pois existe um ou mais clientes vinculados a ele.'];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => 'Ocorreu algum erro ao deletar o projeto.'];
+        }
     }
 
     private function getOwnerId()
