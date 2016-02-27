@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="{{ asset('build/css/components.css') }}">
         <link rel="stylesheet" href="{{ asset('build/css/flaticon.css') }}">
         <link rel="stylesheet" href="{{ asset('build/css/font-awesome.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/css/vendor/bootstrap.min.css') }}">
         <!-- endinject -->
     @else
         <link href="{{ elixir('css/all.css') }}" rel="stylesheet">
@@ -96,10 +97,15 @@
         <script src="{{ asset('build/js/controllers/client/clientList.js') }}"></script>
         <script src="{{ asset('build/js/controllers/client/clientNew.js') }}"></script>
         <script src="{{ asset('build/js/controllers/client/clientRemove.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/project-note/projectNoteEdit.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/project-note/projectNoteList.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/project-note/projectNoteNew.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/project-note/projectNoteRemove.js') }}"></script>
         <!-- endinject -->
 
         <!-- inject:services:js -->
         <script src="{{ asset('build/js/services/client.js') }}"></script>
+        <script src="{{ asset('build/js/services/projectNote.js') }}"></script>
         <!-- endinject -->
     @else
         <script src="{{ elixir('js/all.js') }}"></script>
