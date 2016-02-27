@@ -6,8 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Laravel</title>
     @if(Config::get('app.debug'))
-        <link href="{{ asset('build/css/vendor/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('build/css/vendor/bootstrap-theme.min.css') }}" rel="stylesheet">
+        <!-- inject:css -->
+        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/css/components.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/css/flaticon.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/css/font-awesome.css') }}">
+        <!-- endinject -->
     @else
         <link href="{{ elixir('css/all.css') }}" rel="stylesheet">
     @endif
@@ -66,7 +70,9 @@
 
     <!-- Scripts -->
     @if(Config::get('app.debug'))
+        <!-- inject:vendor:js -->
         <script src="{{ asset('build/js/vendor/jquery.min.js') }}"></script>
+        <script src="{{ asset('build/js/vendor/bootstrap.min.js') }}"></script>
         <script src="{{ asset('build/js/vendor/angular.min.js') }}"></script>
         <script src="{{ asset('build/js/vendor/angular-route.min.js') }}"></script>
         <script src="{{ asset('build/js/vendor/angular-resource.min.js') }}"></script>
@@ -77,18 +83,24 @@
         <script src="{{ asset('build/js/vendor/angular-cookies.min.js') }}"></script>
         <script src="{{ asset('build/js/vendor/query-string.js') }}"></script>
         <script src="{{ asset('build/js/vendor/angular-oauth2.min.js') }}"></script>
+        <!-- endinject -->
 
+        <!-- inject:js -->
         <script src="{{ asset('build/js/app.js') }}"></script>
+        <!-- endinject -->
 
-        <!-- CONTROLLERS -->
-        <script src="{{ asset('build/js/controllers/login.js') }}"></script>
+        <!-- inject:controllers:js -->
         <script src="{{ asset('build/js/controllers/home.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/login.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/client/clientEdit.js') }}"></script>
         <script src="{{ asset('build/js/controllers/client/clientList.js') }}"></script>
         <script src="{{ asset('build/js/controllers/client/clientNew.js') }}"></script>
-        <script src="{{ asset('build/js/controllers/client/clientEdit.js') }}"></script>
+        <script src="{{ asset('build/js/controllers/client/clientRemove.js') }}"></script>
+        <!-- endinject -->
 
-        <!-- SERVICES -->
+        <!-- inject:services:js -->
         <script src="{{ asset('build/js/services/client.js') }}"></script>
+        <!-- endinject -->
     @else
         <script src="{{ elixir('js/all.js') }}"></script>
     @endif

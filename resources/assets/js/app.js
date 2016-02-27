@@ -5,7 +5,7 @@ angular.module('app.services', ['ngResource']);
 
 app.provider('appConfig', function () {
     var config = {
-        baseUrl: 'http://localhost/CodeEducation/curso-laravel-angular/public'
+        baseUrl: 'http://localhost:8000'
     };
 
     return {
@@ -36,9 +36,13 @@ app.config(
                     templateUrl: 'build/views/client/new.html',
                     controller: 'ClientNewController'
                 })
-                .when('/clients/edit/:id', {
+                .when('/clients/:id/edit', {
                     templateUrl: 'build/views/client/edit.html',
                     controller: 'ClientEditController'
+                })
+                .when('/clients/:id/remove', {
+                    templateUrl: 'build/views/client/remove.html',
+                    controller: 'ClientRemoveController'
                 });
 
             OAuthProvider.configure({

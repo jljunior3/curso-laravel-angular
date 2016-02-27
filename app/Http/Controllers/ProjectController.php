@@ -7,7 +7,7 @@ use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Services\ProjectService;
 use Illuminate\Http\Request;
 
-//use LucaDegasperi\OAuth2Server\Facades\Authorizer;
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 class ProjectController extends Controller
 {
@@ -31,8 +31,8 @@ class ProjectController extends Controller
 
     public function index()
     {
-        //return $this->repositoryPresenter->findWhere(['owner_id' => $this->getOwnerId()]);
-        return $this->repositoryPresenter->all();
+        return $this->repositoryPresenter->findWhere(['owner_id' => $this->getOwnerId()]);
+        //return $this->repositoryPresenter->all();
     }
 
     public function store(Request $request)
@@ -42,32 +42,32 @@ class ProjectController extends Controller
 
     public function show($id)
     {
-        /*if (!$this->checkProjectPermissions($id)) {
+        if (!$this->checkProjectPermissions($id)) {
             return ['error' => 'Access Forbidden'];
-        }*/
+        }
 
         return $this->repositoryPresenter->find($id);
     }
 
     public function update(Request $request, $id)
     {
-        /*if (!$this->checkProjectPermissions($id)) {
+        if (!$this->checkProjectPermissions($id)) {
             return ['error' => 'Access Forbidden'];
-        }*/
+        }
 
         return $this->service->update($request->all(), $id);
     }
 
     public function destroy($id)
     {
-        /*if (!$this->checkProjectOwner($id)) {
+        if (!$this->checkProjectOwner($id)) {
             return ['error' => 'Access Forbidden'];
-        }*/
+        }
 
         $this->repository->delete($id);
     }
 
-    /*private function getOwnerId()
+    private function getOwnerId()
     {
         return \Authorizer::getResourceOwnerId();
     }
@@ -85,5 +85,5 @@ class ProjectController extends Controller
     private function checkProjectPermissions($projectId)
     {
         return $this->checkProjectOwner($projectId) || $this->checkProjectMember($projectId);
-    }*/
+    }
 }

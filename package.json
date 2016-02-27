@@ -1,8 +1,11 @@
 {
   "private": true,
   "devDependencies": {
+    "async": "^1.5.2",
     "bower": "^1.7.7",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-inject": "^3.0.0",
+    "gulp-sequence": "^0.4.5"
   },
   "dependencies": {
     "bootstrap-sass": "^3.0.0",

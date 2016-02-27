@@ -26,7 +26,8 @@
                             <td>{{ client.email }}</td>
                             <td>{{ client.phone }}</td>
                             <td>
-                                <a ng-href="#/clients/edit/{{ client.id }}" class="btn btn-primary btn-xs">Editar</a>
+                                <a ng-href="#/clients/{{ client.id }}/edit" class="btn btn-primary btn-xs">Editar</a>
+                                <a ng-href="#/clients/{{ client.id }}/remove" class="btn btn-danger btn-xs">Excluir</a>
                             </td>
                         </tr>
                         </tbody>
