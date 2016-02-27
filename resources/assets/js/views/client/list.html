@@ -15,19 +15,21 @@
                             <th>Responsible</th>
                             <th>E-mail</th>
                             <th>Phone</th>
-                            <th>Ação</th>
+                            <th colspan="2">Ação</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="client in clients">
-                            <td>{{ client.id }}</td>
-                            <td>{{ client.name }}</td>
-                            <td>{{ client.responsible }}</td>
-                            <td>{{ client.email }}</td>
-                            <td>{{ client.phone }}</td>
-                            <td>
-                                <a ng-href="#/clients/{{ client.id }}/edit" class="btn btn-primary btn-xs">Editar</a>
-                                <a ng-href="#/clients/{{ client.id }}/remove" class="btn btn-danger btn-xs">Excluir</a>
+                        <tr ng-repeat="o in clients">
+                            <td>{{ o.id }}</td>
+                            <td>{{ o.name }}</td>
+                            <td>{{ o.responsible }}</td>
+                            <td>{{ o.email }}</td>
+                            <td>{{ o.phone }}</td>
+                            <td width="1%">
+                                <a ng-href="#/clients/{{ o.id }}/edit" class="btn btn-primary btn-xs">Editar</a>
+                            </td>
+                            <td width="1%">
+                                <a ng-href="#/clients/{{ o.id }}/remove" class="btn btn-danger btn-xs">Excluir</a>
                             </td>
                         </tr>
                         </tbody>

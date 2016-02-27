@@ -25,10 +25,10 @@ app.config([
                 templateUrl: 'build/views/login.html',
                 controller: 'LoginController'
             })
-            .when('/home', {
+            /*.when('/home', {
                 templateUrl: 'build/views/home.html',
                 controller: 'HomeController'
-            })
+            })*/
 
             .when('/clients', {
                 templateUrl: 'build/views/client/list.html',
@@ -48,7 +48,7 @@ app.config([
             })
 
             .when('/project/:id/notes', {
-                templateUrl: 'build/views/project-note/index.html',
+                templateUrl: 'build/views/project-note/list.html',
                 controller: 'ProjectNoteListController'
             })
             .when('/project/:id/notes/:noteId', {
@@ -111,6 +111,6 @@ app.run(['$rootScope', '$window', 'OAuth', function ($rootScope, $window, OAuth)
         }
 
         // Redirect to '/login' with the 'error_reason'.
-        return $window.location.href = '/login?error_reason=' + rejection.data.error;
+        return $window.location.href = '/#/login?error_reason=' + rejection.data.error;
     });
 }]);

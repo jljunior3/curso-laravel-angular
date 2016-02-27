@@ -5,29 +5,27 @@
             <p><a ng-href="#/clients/new" class="btn btn-default">Novo cliente</a></p>
 
             <div class="panel panel-default">
-                <div class="panel-heading">Listagem de clientes</div>
+                <div class="panel-heading">Listagem de notas do projeto</div>
                 <div class="panel-body">
                     <table class="table">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Responsible</th>
-                            <th>E-mail</th>
-                            <th>Phone</th>
-                            <th>Ação</th>
+                            <th>Title</th>
+                            <th>Note</th>
+                            <th colspan="2">Ação</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="client in clients">
-                            <td>{{ client.id }}</td>
-                            <td>{{ client.name }}</td>
-                            <td>{{ client.responsible }}</td>
-                            <td>{{ client.email }}</td>
-                            <td>{{ client.phone }}</td>
-                            <td>
-                                <a ng-href="#/clients/{{ client.id }}/edit" class="btn btn-primary btn-xs">Editar</a>
-                                <a ng-href="#/clients/{{ client.id }}/remove" class="btn btn-danger btn-xs">Excluir</a>
+                        <tr ng-repeat="o in projectNotes">
+                            <td>{{ o.id }}</td>
+                            <td>{{ o.title }}</td>
+                            <td>{{ o.note }}</td>
+                            <td width="1%">
+                                <a ng-href="#/project/{{ o.project_id }}/notes/{{ o.id }}/edit" class="btn btn-primary btn-xs">Editar</a>
+                            </td>
+                            <td width="1%">
+                                <a ng-href="#/project/{{ o.project_id }}/notes/{{ o.id }}/remove" class="btn btn-danger btn-xs">Excluir</a>
                             </td>
                         </tr>
                         </tbody>

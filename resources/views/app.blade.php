@@ -43,6 +43,7 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     <li><a ng-href="#/clients">Clientes</a></li>
+                    <li><a ng-href="#/project/1/notes">Notas do projeto</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">

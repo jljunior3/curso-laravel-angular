@@ -167,10 +167,12 @@ gulp.task('clear-build-folder', function () {
     clean.sync(config.build_path);
 });
 
-gulp.task('build-default', gulpSequence(
-    'clear-build-folder',
-    ['copy-html', 'copy-font', 'copy-image']
-));
+gulp.task('build-default', function (callback) {
+    gulpSequence(
+        'clear-build-folder',
+        ['copy-html', 'copy-font', 'copy-image']
+    )(callback);
+});
 
 gulp.task('default', function () {
     gulp.start('build-default');
@@ -192,14 +194,16 @@ gulp.task('default', function () {
     });
 });
 
-gulp.task('build-dev', gulpSequence(
-    'clear-build-folder',
-    ['copy-scripts', 'copy-styles'], 'inject',
-    ['copy-html', 'copy-font', 'copy-image']
-));
+gulp.task('build-dev', function (callback) {
+    gulpSequence(
+        'clear-build-folder',
+        ['copy-scripts', 'copy-styles'], 'inject',
+        ['copy-html', 'copy-font', 'copy-image']
+    )(callback);
+});
 
 gulp.task('watch-dev', function () {
     liveReload.listen();
     gulp.start('build-dev');
-    gulp.watch(config.assets_path + '/**', ['build-dev']);
+    gulp.watch(config.assets_path + '/**/*', ['build-dev']);
 });
