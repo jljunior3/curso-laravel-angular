@@ -25,10 +25,10 @@ app.config([
                 templateUrl: 'build/views/login.html',
                 controller: 'LoginController'
             })
-            /*.when('/home', {
+            .when('/home', {
                 templateUrl: 'build/views/home.html',
                 controller: 'HomeController'
-            })*/
+            })
 
             .when('/clients', {
                 templateUrl: 'build/views/client/list.html',
@@ -47,23 +47,23 @@ app.config([
                 controller: 'ClientRemoveController'
             })
 
-            .when('/project/:id/notes', {
+            .when('/project/:projectId/notes', {
                 templateUrl: 'build/views/project-note/list.html',
                 controller: 'ProjectNoteListController'
             })
-            .when('/project/:id/notes/:noteId', {
+            .when('/project/:projectId/notes/:id/show', {
                 templateUrl: 'build/views/project-note/show.html',
                 controller: 'ProjectNoteShowController'
             })
-            .when('/project/:id/notes/new', {
+            .when('/project/:projectId/notes/new', {
                 templateUrl: 'build/views/project-note/new.html',
                 controller: 'ProjectNoteNewController'
             })
-            .when('/project/:id/notes/:noteId/edit', {
+            .when('/project/:projectId/notes/:id/edit', {
                 templateUrl: 'build/views/project-note/edit.html',
                 controller: 'ProjectNoteEditController'
             })
-            .when('/project/:id/notes/:noteId/remove', {
+            .when('/project/:projectId/notes/:id/remove', {
                 templateUrl: 'build/views/project-note/remove.html',
                 controller: 'ProjectNoteRemoveController'
             });

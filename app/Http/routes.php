@@ -20,21 +20,37 @@ Route::post('oauth/access_token', function () {
 });
 
 Route::group(['middleware' => 'oauth'], function () {
-
     Route::resource('client', 'ClientController', ['except' => ['create', 'edit']]);
-
-    //Route::group(['middleware' => 'CheckProjectOwner'], function() {});
     Route::resource('project', 'ProjectController', ['except' => ['create', 'edit']]);
 
     Route::group(['prefix' => 'project'], function () {
-        Route::get('{id}/note', 'ProjectNoteController@index');
-        Route::post('{id}/note', 'ProjectNoteController@store');
-        Route::get('{id}/note/{noteId}', 'ProjectNoteController@show');
-        Route::put('{id}/note/{noteId}', 'ProjectNoteController@update');
-        Route::delete('{id}/note/{noteId}', 'ProjectNoteController@destroy');
+        Route::get('{projectId}/note', 'ProjectNoteController@index');
+        Route::post('{projectId}/note', 'ProjectNoteController@store');
+        Route::get('{projectId}/note/{id}', 'ProjectNoteController@show');
+        Route::delete('{projectId}/note/{id}', 'ProjectNoteController@destroy');
+        Route::put('{projectId}/note/{id}', 'ProjectNoteController@update');
 
-        Route::post('{id}/file', 'ProjectFileController@store');
+        Route::get('{projectId}/task', 'ProjectTaskController@index');
+        Route::post('{projectId}/task', 'ProjectTaskController@store');
+        Route::get('{projectId}/task/{id}', 'ProjectTaskController@show');
+        Route::delete('{projectId}/task/{id}', 'ProjectTaskController@destroy');
+        Route::put('{projectId}/task/{id}', 'ProjectTaskController@update');
+
+        Route::get('{projectId}/member', 'ProjectMemberController@index');
+        Route::post('{projectId}/member', 'ProjectMemberController@store');
+        Route::get('{projectId}/member/{id}', 'ProjectMemberController@show');
+        Route::delete('{projectId}/member/{id}', 'ProjectMemberController@destroy');
+
+        Route::get('{projectId}/file', 'ProjectFileController@index');
+        Route::post('{projectId}/file', 'ProjectFileController@store');
+        Route::get('{projectId}/file/{id}', 'ProjectFileController@show');
+        Route::get('{projectId}/file/{id}/download', 'ProjectFileController@showFile');
+        Route::delete('{projectId}/file/{id}', 'ProjectFileController@destroy');
+        Route::put('{projectId}/file/{id}', 'ProjectFileController@update');
     });
+
+    Route::get('user/authenticated', 'UserController@authenticated');
+    Route::resource('user', 'UserController', ['except' => ['create', 'edit']]);
 });
 
 

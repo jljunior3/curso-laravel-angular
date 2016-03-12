@@ -2,92 +2,121 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Services\ProjectService;
 use Illuminate\Http\Request;
 
 class ProjectFileController extends Controller
 {
-    /**
-     * @var ProjectRepository
-     */
-    private $repository;
+    //    /**
+    //     * @var ProjectRepository
+    //     */
+    //    private $repository;
 
     /**
      * @var ProjectService
      */
     private $service;
 
-    public function __construct(ProjectRepository $repository, ProjectService $service)
+    public function __construct(ProjectService $service)
     {
-        $this->repository = $repository;
+        //$this->repository = $repository;
         $this->service = $service;
+
+        $this->middleware('check-project-permissions', ['except' => ['show', 'index']]);
     }
 
-    public function index()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index($projectId)
     {
-        //return $this->repository->with(['owner'])->all();
-        return $this->repository->findWhere(['owner_id' => $this->getOwnerId()]);
+        return $this->service->getFiles($projectId);
     }
 
-    public function store(Request $request, $id)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request $request
+     * @return Response
+     */
+    public function store(Request $request, $projectId)
     {
-        $file = $request->file('file');
-        $extension = $file->getClientOriginalExtension();
+        $data = [
+            'file'        => $request->file('file'),
+            'extension'   => $request->file('file')->getClientOriginalExtension(),
+            'name'        => $request->name,
+            'description' => $request->description,
+            'project_id'  => $projectId
+        ];
+        return $this->service->create($data);
+    }
 
-        $this->service->createFile([
-            'project_id' => $id,
-            'file' => $file,
-            'extension' => $extension,
-            'name' => $request->name,
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $projectId
+     * @param  int $id
+     * @return Response
+     */
+    public function show($projectId, $id)
+    {
+        return $this->service->find($projectId, $id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request $request
+     * @param  int $id
+     * @return Response
+     */
+    public function update(Request $request, $projectId, $id)
+    {
+        $data = [
+            'name'        => $request->name,
             'description' => $request->description
-        ]);
+        ];
+        return $this->service->update($data, $id);
     }
 
-    public function show($id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($projectId, $id)
     {
-        if (!$this->checkProjectPermissions($id)) {
-            return ['error' => 'Access Forbidden'];
-        }
-
-        return $this->repository->find($id);
+        return $this->service->delete($projectId, $id);
     }
 
-    public function update(Request $request, $id)
+    public function showFile($projectId, $id)
     {
-        if (!$this->checkProjectPermissions($id)) {
-            return ['error' => 'Access Forbidden'];
-        }
-
-        return $this->service->update($request->all(), $id);
+        $filePath    = $this->service->getFilePath($id);
+        $fileContent = file_get_contents($filePath);
+        $file64      = base64_encode($fileContent);
+        return [
+            'file' => $file64,
+            'size' => filesize($filePath),
+            'name' => basename($filePath)
+            // 'name' => $this->service->getFileName($id)
+        ];
     }
 
-    public function destroy($id)
-    {
-        if (!$this->checkProjectOwner($id)) {
-            return ['error' => 'Access Forbidden'];
-        }
-
-        $this->repository->delete($id);
-    }
-
-    private function getOwnerId()
-    {
-        return \Authorizer::getResourceOwnerId();
-    }
-
-    private function checkProjectOwner($projectId)
-    {
-        return $this->repository->skipPresenter()->isOwner($projectId, $this->getOwnerId());
-    }
-
-    private function checkProjectMember($projectId)
-    {
-        return $this->repository->skipPresenter()->hasMember($projectId, $this->getOwnerId());
-    }
-
-    private function checkProjectPermissions($projectId)
-    {
-        return $this->checkProjectOwner($projectId) || $this->checkProjectMember($projectId);
-    }
+    //    public function store(Request $request, $id)
+    //    {
+    //        $file = $request->file('file');
+    //        $extension = $file->getClientOriginalExtension();
+    //        $data = [
+    //            'project_id' => $id,
+    //            'file' => $file,
+    //            'extension' => $extension,
+    //            'name' => $request->name,
+    //            'description' => $request->description
+    //        ];
+    //
+    //        return $this->service->createFile($data);
+    //    }
 }

@@ -8,13 +8,14 @@ use League\Fractal\TransformerAbstract;
 class OwnerTransformer extends TransformerAbstract
 {
     /**
-     * @param User $user
+     * @param User $owner
      * @return array
      */
-    public function transform(User $user)
+    public function transform(User $owner)
     {
         return [
-            'name' => $user->name
+            'id'   => $owner->id,
+            'name' => $owner->name
         ];
     }
 }

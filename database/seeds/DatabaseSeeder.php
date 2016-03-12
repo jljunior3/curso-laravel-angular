@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,18 +12,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //\CodeProject\Entities\Client::truncate();
-        //\CodeProject\Entities\Project::truncate();
+        Model::unguard();
 
         $this->call(UserTableSeeder::class);
         $this->call(ClientTableSeeder::class);
         $this->call(ProjectTableSeeder::class);
         $this->call(ProjectNoteTableSeeder::class);
+        $this->call(ProjectTaskTableSeeder::class);
+        $this->call(ProjectMemberTableSeeder::class);
+        $this->call(ProjectFileTableSeeder::class);
+        $this->call(OauthClientTableSeeder::class);
 
-        DB::table('oauth_clients')->insert([
-            'id' => 'appid1',
-            'secret' => 'secret',
-            'name' => 'app'
-        ]);
+        Model::reguard();
     }
 }

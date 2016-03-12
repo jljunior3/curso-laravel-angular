@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
-            <p><a ng-href="#/clients/new" class="btn btn-default">Novo cliente</a></p>
+            <p><a ng-href="#/project/{{ projectId}}/notes/new" class="btn btn-default">Novo cliente</a></p>
 
             <div class="panel panel-default">
                 <div class="panel-heading">Listagem de notas do projeto</div>
@@ -20,7 +20,7 @@
                         <tr ng-repeat="o in projectNotes">
                             <td>{{ o.id }}</td>
                             <td>{{ o.title }}</td>
-                            <td>{{ o.note }}</td>
+                            <td>{{ o.note | limitTo: 100 }}...</td>
                             <td width="1%">
                                 <a ng-href="#/project/{{ o.project_id }}/notes/{{ o.id }}/edit" class="btn btn-primary btn-xs">Editar</a>
                             </td>
