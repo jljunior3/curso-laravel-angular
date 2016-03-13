@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class ProjectTaskController extends Controller
 {
-    //    /**
-    //     * @var ProjectTaskRepository
-    //     */
-    //    private $repository;
-    //    private $repositoryPresenter;
 
     /**
      * @var ProjectTaskService
@@ -20,10 +15,7 @@ class ProjectTaskController extends Controller
 
     public function __construct(ProjectTaskService $service)
     {
-        //        $this->repository = $repository;
-        //        $this->repositoryPresenter = $repository->setPresenter(ProjectTaskPresenter::class);
         $this->service = $service;
-
         $this->middleware('check-project-permissions', ['except' => ['show', 'index']]);
     }
 
@@ -85,37 +77,4 @@ class ProjectTaskController extends Controller
     {
         return $this->service->delete($projectId, $id);
     }
-
-    //    public function index($id)
-    //    {
-    //        return $this->repositoryPresenter->findWhere(['project_id' => $id]);
-    //    }
-    //
-    //    public function store(Request $request, $id)
-    //    {
-    //        return $this->service->create($request->all() + ['project_id' => $id]);
-    //    }
-    //
-    //    public function show($id, $taskId)
-    //    {
-    //        try {
-    //            $tasks = $this->repositoryPresenter->findWhere(['project_id' => $id, 'id' => $taskId]);
-    //
-    //            if (!isset($tasks[0])) throw new ModelNotFoundException;
-    //
-    //            return $tasks;
-    //        } catch (ModelNotFoundException $e) {
-    //            return ['status' => 'error', 'message' => 'Tarefa não encontrada.'];
-    //        }
-    //    }
-    //
-    //    public function update(Request $request, $id, $taskId)
-    //    {
-    //        return $this->service->update($request->all(), $taskId);
-    //    }
-    //
-    //    public function destroy($id, $taskId)
-    //    {
-    //        return $this->service->delete($taskId);
-    //    }
 }

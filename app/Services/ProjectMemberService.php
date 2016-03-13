@@ -5,6 +5,7 @@ namespace CodeProject\Services;
 use CodeProject\Repositories\ProjectMemberRepository;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectMemberValidator;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class ProjectMemberService
 {
@@ -12,7 +13,14 @@ class ProjectMemberService
      * @var ProjectRepository
      */
 
-    private $repository;
+    private $projectRepository;
+
+    /**
+     * @var ProjectMemberRepository
+     */
+
+    private $memberRepository;
+
     /**
      * @var ProjectValidator
      */
@@ -34,8 +42,9 @@ class ProjectMemberService
             return $this->memberRepository->getMembers($projectId);
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Nenhum registro encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -43,19 +52,18 @@ class ProjectMemberService
     public function getMember($projectId, $id)
     {
         try {
-            $data = $this->memberRepository->findWhere(['project_id' => $projectId, 'member_id' => $id]);
+            $members = $this->memberRepository->findWhere(['project_id' => $projectId, 'member_id' => $id]);
 
-            if (isset($data['data']) && count($data['data'])) {
-                return [
-                    'data' => current($data['data'])
-                ];
+            if (isset($members[0])) {
+                return $members[0];
             }
 
-            return $data;
+            return [];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -64,18 +72,23 @@ class ProjectMemberService
     {
         try {
             $this->validator->with($data)->passesOrFail();
+            $result = $this->projectRepository->addMember($data['project_id'], $data['user_id']);
+
             return [
-                'success' => $this->projectRepository->addMember($data['project_id'], $data['user_id'])
+                'success' => $result,
+                "message" => 'Membro adicionado com sucesso.'
             ];
         } catch (ValidatorException $e) {
             return [
-                'error'   => true,
-                'message' => $e->getMessageBag()
+                'error'      => true,
+                'message'    => $e->getMessageBag(),
+                "messageDev" => 'ValidatorException'
             ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao adicionar membro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -83,13 +96,16 @@ class ProjectMemberService
     public function removeMember($projectId, $memberId)
     {
         try {
+            $result = $this->projectRepository->removeMember($projectId, $memberId);
             return [
-                'success' => $this->projectRepository->removeMember($projectId, $memberId)
+                'success' => $result,
+                "message" => 'Membro removido com sucesso.'
             ];
         } catch (\Exception $e) {
             return [
                 "error"   => true,
-                "message" => $e->getMessage()
+                "message" => 'Falha ao remover membro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }

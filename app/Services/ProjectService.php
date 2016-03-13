@@ -5,6 +5,8 @@ namespace CodeProject\Services;
 use CodeProject\Presenters\ProjectPresenter;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectValidator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -42,7 +44,8 @@ class ProjectService
         } catch (\Exception $e) {
             return [
                 "error"   => true,
-                "message" => $e->getMessage()
+                "message"    => 'Nenhum registro encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -56,7 +59,8 @@ class ProjectService
         } catch (\Exception $e) {
             return [
                 "error"   => true,
-                "message" => $e->getMessage()
+                "message"    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -65,11 +69,27 @@ class ProjectService
     {
         try {
             $this->repository->delete($id);
-            return ['success' => true];
+            return [
+                'success' => true,
+                "message" => 'Registro excluído com sucesso.'
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
+            ];
+        } catch (QueryException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Este registro não pode ser excluído, pois existe um ou mais projetos vinculados a ele.',
+                "messageDev" => $e->getMessage()
+            ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao excluir registro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -81,13 +101,15 @@ class ProjectService
             return $this->repository->setPresenter($this->presenter)->create($data);
         } catch (ValidatorException $e) {
             return [
-                'error'   => true,
-                'message' => $e->getMessageBag()
+                'error'      => true,
+                'message'    => $e->getMessageBag(),
+                "messageDev" => 'ValidatorException'
             ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao gravar registro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -99,118 +121,22 @@ class ProjectService
             return $this->repository->setPresenter($this->presenter)->update($data, $id);
         } catch (ValidatorException $e) {
             return [
-                'error'   => true,
-                'message' => $e->getMessageBag()
+                'error'      => true,
+                'message'    => $e->getMessageBag(),
+                "messageDev" => 'ValidatorException'
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao atualizar dados.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
-
-    //    public function create(array $data)
-    //    {
-    //        try {
-    //            $this->validator->with($data)->passesOrFail();
-    //            $this->repository->create($data);
-    //
-    //            return ['status' => 'success', 'message' => 'Projeto criado com sucesso.'];
-    //        } catch (ValidatorException $e) {
-    //            return ['status' => 'error', 'errors' => $e->getMessageBag()];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'error', 'message' => 'Falha ao gravar projeto.'];
-    //        }
-    //    }
-    //
-    //    public function update(array $data, $id)
-    //    {
-    //        try {
-    //            $this->validator->with($data)->passesOrFail();
-    //            $this->repository->find($id) && $this->repository->update($data, $id);
-    //
-    //            return ['status' => 'success', 'message' => 'Projeto atualizado com sucesso.'];
-    //        } catch (ValidatorException $e) {
-    //            return ['status' => 'error', 'message' => $e->getMessageBag()];
-    //        } catch (ModelNotFoundException $e) {
-    //            return ['status' => 'error', 'message' => 'Projeto não encontrado.'];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'error', 'message' => 'Falha ao atualizar projeto.'];
-    //        }
-    //    }
-    //
-    //    public function delete($id)
-    //    {
-    //        try {
-    //            $this->repository->delete($id);
-    //            return ['status' => 'success', 'message' => 'Projeto deletado com sucesso.'];
-    //        } catch (ModelNotFoundException $e) {
-    //            return ['status' => 'error', 'message' => 'Projeto não encontrado.'];
-    //        } catch (QueryException $e) {
-    //            return [
-    //                'status' => 'error',
-    //                'message' => 'Este projeto não pode ser apagado, pois existe um ou mais clientes vinculados a ele.'
-    //            ];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'error', 'message' => 'Falha ao deletar projeto.'];
-    //        }
-    //    }
-    //
-    //    public function createFile(array $data)
-    //    {
-    //        try {
-    //            $project = $this->repository->find($data['project_id']);
-    //            $projectFile = $project->files()->create($data);
-    //
-    //            $this->storage->put($projectFile->id . '.' . $data['extension'], $this->filesystem->get($data['file']));
-    //
-    //            return ['status' => 'success', 'message' => 'Arquivo criado com sucesso.'];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'error', 'message' => 'Falha ao gravar arquivo.'];
-    //        }
-    //    }
-    //
-    //    /*
-    //
-    //    - addMember: para adicionar um novo member em um projeto
-    //    - removeMember: para remover um membro de um projeto
-    //    - isMember: para verificar se um usuário é membro de um determinado projeto
-    //
-    //     */
-    //
-    //    public function addMember($id, $memberId)
-    //    {
-    //        try {
-    //            $project = $this->repository->find($id);
-    //            $member = $this->userRepository->find($memberId);
-    //
-    //            $project->members()->associate($member->id);
-    //            //$project->members()->attach($member->id);
-    //
-    //            return ['status' => 'success', 'message' => 'Membro adicionado ao projeto com sucesso.'];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'error', 'message' => 'Falha ao adicionar membro ao projeto.'];
-    //        }
-    //    }
-    //
-    //    public function removeMember($id, $memberId)
-    //    {
-    //        try {
-    //            $project = $this->repository->find($id);
-    //            $member = $this->userRepository->find($memberId);
-    //
-    //            $project->members()->dissociate($member->id);
-    //            //$project->members()->detach($member->id);
-    //
-    //            return ['status' => 'success', 'message' => 'Membro deletado do projeto com sucesso.'];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'error', 'message' => 'Falha ao deletar membro do projeto.'];
-    //        }
-    //    }
-    //
-    //    public function isMember($id, $memberId)
-    //    {
-    //        return $this->repository->hasMember($id, $memberId);
-    //    }
 }

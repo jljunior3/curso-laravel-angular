@@ -7,10 +7,6 @@ use Illuminate\Http\Request;
 
 class ProjectFileController extends Controller
 {
-    //    /**
-    //     * @var ProjectRepository
-    //     */
-    //    private $repository;
 
     /**
      * @var ProjectService
@@ -19,9 +15,7 @@ class ProjectFileController extends Controller
 
     public function __construct(ProjectService $service)
     {
-        //$this->repository = $repository;
         $this->service = $service;
-
         $this->middleware('check-project-permissions', ['except' => ['show', 'index']]);
     }
 
@@ -97,6 +91,7 @@ class ProjectFileController extends Controller
         $filePath    = $this->service->getFilePath($id);
         $fileContent = file_get_contents($filePath);
         $file64      = base64_encode($fileContent);
+
         return [
             'file' => $file64,
             'size' => filesize($filePath),
@@ -104,19 +99,4 @@ class ProjectFileController extends Controller
             // 'name' => $this->service->getFileName($id)
         ];
     }
-
-    //    public function store(Request $request, $id)
-    //    {
-    //        $file = $request->file('file');
-    //        $extension = $file->getClientOriginalExtension();
-    //        $data = [
-    //            'project_id' => $id,
-    //            'file' => $file,
-    //            'extension' => $extension,
-    //            'name' => $request->name,
-    //            'description' => $request->description
-    //        ];
-    //
-    //        return $this->service->createFile($data);
-    //    }
 }

@@ -5,6 +5,8 @@ namespace CodeProject\Services;
 use CodeProject\Presenters\ProjectTaskPresenter;
 use CodeProject\Repositories\ProjectTaskRepository;
 use CodeProject\Validators\ProjectTaskValidator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -42,8 +44,9 @@ class ProjectTaskService
                 ->findWhere(['project_id' => $projectId]);
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Nenhum registro encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -51,7 +54,7 @@ class ProjectTaskService
     public function find($projectId, $id)
     {
         try {
-            $tasks = (array) $this->repository
+            $tasks = (array)$this->repository
                 ->setPresenter($this->presenter)
                 ->findWhere(['project_id' => $projectId, 'id' => $id]);
 
@@ -62,8 +65,9 @@ class ProjectTaskService
             return [];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -72,11 +76,27 @@ class ProjectTaskService
     {
         try {
             $this->repository->delete($id);
-            return ['success' => true];
+            return [
+                'success' => true,
+                "message" => 'Registro excluído com sucesso.'
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
+            ];
+        } catch (QueryException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Este registro não pode ser excluído, pois existe um ou mais projetos vinculados a ele.',
+                "messageDev" => $e->getMessage()
+            ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao excluir registro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -88,13 +108,15 @@ class ProjectTaskService
             return $this->repository->setPresenter($this->presenter)->create($data);
         } catch (ValidatorException $e) {
             return [
-                'error'   => true,
-                'message' => $e->getMessageBag()
+                'error'      => true,
+                'message'    => $e->getMessageBag(),
+                "messageDev" => 'ValidatorException'
             ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao gravar registro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -106,59 +128,22 @@ class ProjectTaskService
             return $this->repository->setPresenter($this->presenter)->update($data, $id);
         } catch (ValidatorException $e) {
             return [
-                'error'   => true,
-                'message' => $e->getMessageBag()
+                'error'      => true,
+                'message'    => $e->getMessageBag(),
+                "messageDev" => 'ValidatorException'
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao atualizar dados.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
-
-    //    public function create(array $data)
-    //    {
-    //        try {
-    //            $this->validator->with($data)->passesOrFail();
-    //            $this->repository->create($data);
-    //
-    //            return ['status' => 'success', 'message' => 'Tarefa criada com sucesso.'];
-    //        } catch (ValidatorException $e) {
-    //            return ['status' => 'error', 'errors' => $e->getMessageBag()];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'success', 'message' => 'Falha ao gravar tarefa.'];
-    //        }
-    //    }
-    //
-    //    public function update(array $data, $id)
-    //    {
-    //        try {
-    //            $this->validator->with($data)->passesOrFail();
-    //            $this->repository->update($data, $id);
-    //
-    //            return ['status' => 'success', 'message' => 'Tarefa atualizada com sucesso.'];
-    //        } catch (ValidatorException $e) {
-    //            return ['status' => 'error', 'message' => $e->getMessageBag()];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'success', 'message' => 'Falha ao atualizar tarefa.'];
-    //        }
-    //    }
-    //
-    //    public function delete($noteId)
-    //    {
-    //        try {
-    //            $this->repository->delete($noteId);
-    //            return ['status' => 'success', 'message' => 'Tarefa deletada com sucesso.'];
-    //        } catch (ModelNotFoundException $e) {
-    //            return ['status' => 'error', 'message' => 'Tarefa não encontrada.'];
-    //        } catch (QueryException $e) {
-    //            return [
-    //                'status' => 'error',
-    //                'message' => 'Esta tarefa não pode ser deletada, pois existe um ou mais projetos vinculados a ela.'
-    //            ];
-    //        } catch (ErrorException $e) {
-    //            return ['status' => 'error', 'message' => 'Falha ao deletar tarefa.'];
-    //        }
-    //    }
 }

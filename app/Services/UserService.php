@@ -23,8 +23,9 @@ class UserService
             return $this->repository->all();
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Nenhum registro encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -35,8 +36,9 @@ class UserService
             return $this->repository->find($id);
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }

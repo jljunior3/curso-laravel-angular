@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-//    /**
-//     * @var ProjectRepository
-//     */
-//    private $repository;
-//    private $repositoryPresenter;
 
     /**
      * @var ProjectService
@@ -20,10 +15,6 @@ class ProjectController extends Controller
 
     public function __construct(ProjectService $service)
     {
-//        $this->repository          = $repository;
-//        $this->repositoryPresenter = $repository->setPresenter(ProjectPresenter::class);
-//        $this->service             = $service;
-
         $this->service = $service;
         $this->middleware('check-project-owner', ['except' => ['index', 'store', 'show']]);
         $this->middleware('check-project-permissions', ['except' => ['index', 'store', 'update', 'destroy']]);
@@ -83,71 +74,4 @@ class ProjectController extends Controller
     {
         return $this->service->delete($id);
     }
-
-    //    public function index()
-    //    {
-    //        return $this->repositoryPresenter->findWhere(['owner_id' => $this->getOwnerId()]);
-    //        //return $this->repositoryPresenter->all();
-    //    }
-    //
-    //    public function store(Request $request)
-    //    {
-    //        return $this->service->create($request->all());
-    //    }
-    //
-    //    public function show($id)
-    //    {
-    //        if (!$this->checkProjectPermissions($id)) {
-    //            return ['status' => 'error', 'message' => 'Access Forbidden'];
-    //        }
-    //
-    //        try {
-    //            return $this->repositoryPresenter->find($id);
-    //        } catch (ModelNotFoundException $e) {
-    //            return ['status' => 'error', 'message' => 'Projeto não encontrado.'];
-    //        }
-    //    }
-    //
-    //    public function update(Request $request, $id)
-    //    {
-    //        if (!$this->checkProjectPermissions($id)) {
-    //            return ['status' => 'error', 'message' => 'Access Forbidden'];
-    //        }
-    //
-    //        return $this->service->update($request->all(), $id);
-    //    }
-    //
-    //    public function destroy($id)
-    //    {
-    //        if (!$this->checkProjectOwner($id)) {
-    //            return ['status' => 'error', 'message' => 'Access Forbidden'];
-    //        }
-    //
-    //        return $this->service->delete($id);
-    //    }
-    //
-    //
-    //    /*
-    //     * Private functions
-    //     */
-    //
-    //    private function getOwnerId()
-    //    {
-    //        return \Authorizer::getResourceOwnerId();
-    //    }
-    //
-    //    private function checkProjectOwner($projectId)
-    //    {
-    //        return $this->repository->isOwner($projectId, $this->getOwnerId());
-    //    }
-    //
-    //    private function checkProjectMember($projectId)
-    //    {
-    //        return $this->repository->hasMember($projectId, $this->getOwnerId());
-    //    }
-    //
-    //    private function checkProjectPermissions($projectId)
-    //    {
-    //        return $this->checkProjectOwner($projectId) || $this->checkProjectMember($projectId);
-    //    }
 }

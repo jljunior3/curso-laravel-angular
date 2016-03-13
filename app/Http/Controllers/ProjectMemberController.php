@@ -5,7 +5,7 @@ namespace CodeProject\Http\Controllers;
 use CodeProject\Services\ProjectService;
 use Illuminate\Http\Request;
 
-class ProjectFileController extends Controller
+class ProjectMemberController extends Controller
 {
     /**
      * @var ProjectService

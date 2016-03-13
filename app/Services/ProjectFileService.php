@@ -4,6 +4,8 @@ namespace CodeProject\Services;
 
 use CodeProject\Repositories\ProjectFileRepository;
 use CodeProject\Validators\ProjectFileValidator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -49,8 +51,9 @@ class ProjectFileService
             return $this->repository->getFiles($projectId);
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Nenhum registro encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -58,19 +61,18 @@ class ProjectFileService
     public function find($projectId, $id)
     {
         try {
-            $data = $this->repository->findWhere(['project_id' => $projectId, 'id' => $id]);
+            $files = $this->repository->findWhere(['project_id' => $projectId, 'id' => $id]);
 
-            if (isset($data['data']) && count($data['data'])) {
-                return [
-                    'data' => current($data['data'])
-                ];
+            if (isset($files[0])) {
+                return $files[0];
             }
 
-            return $data;
+            return [];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -85,13 +87,15 @@ class ProjectFileService
             return ['success' => true];
         } catch (ValidatorException $e) {
             return [
-                'error'   => true,
-                'message' => $e->getMessageBag()
+                'error'      => true,
+                'message'    => $e->getMessageBag(),
+                "messageDev" => 'ValidatorException'
             ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao gravar registro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -99,7 +103,7 @@ class ProjectFileService
     public function delete($projectId, $id)
     {
         try {
-            $projectFile = $this->repository->skipPresenter()->find($id);
+            $projectFile = $this->repository->find($id);
 
             if ($this->storage->exists($projectFile->getFileName())) {
                 $this->storage->delete($projectFile->getFileName());
@@ -107,11 +111,27 @@ class ProjectFileService
 
             $this->repository->delete($id);
 
-            return ['success' => true];
+            return [
+                'success' => true,
+                "message" => 'Registro excluído com sucesso.'
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
+            ];
+        } catch (QueryException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Este registro não pode ser excluído, pois existe um ou mais projetos vinculados a ele.',
+                "messageDev" => $e->getMessage()
+            ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => $e->getMessage()
+                "error"      => true,
+                "message"    => 'Falha ao excluir registro.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -123,9 +143,21 @@ class ProjectFileService
             return $this->repository->update($data, $id);
         } catch (ValidatorException $e) {
             return [
-                'error'   => true,
-                'message' => $e->getMessageBag(),
-                'data'    => $data
+                'error'      => true,
+                'message'    => $e->getMessageBag(),
+                "messageDev" => 'ValidatorException'
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'error'      => true,
+                'message'    => 'Registro não encontrado.',
+                "messageDev" => $e->getMessage()
+            ];
+        } catch (\Exception $e) {
+            return [
+                "error"      => true,
+                "message"    => 'Falha ao atualizar dados.',
+                "messageDev" => $e->getMessage()
             ];
         }
     }
@@ -133,7 +165,7 @@ class ProjectFileService
     public function getFilePath($id)
     {
         try {
-            $projectFile = $this->repository->skipPresenter()->find($id);
+            $projectFile = $this->repository->find($id);
             return $this->getBaseURL($projectFile);
         } catch (\Exception $e) {
             return [
@@ -154,7 +186,7 @@ class ProjectFileService
 
     public function getFileName($id)
     {
-        $projectFile = $this->repository->skipPresenter()->find($id);
+        $projectFile = $this->repository->find($id);
         return $projectFile->getFileName();
     }
 }

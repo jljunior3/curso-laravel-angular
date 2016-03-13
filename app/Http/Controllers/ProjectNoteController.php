@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class ProjectNoteController extends Controller
 {
-    //    /**
-    //     * @var ProjectNoteRepository
-    //     */
-    //    private $repository;
-    //    private $repositoryPresenter;
 
     /**
      * @var ProjectNoteService
@@ -20,10 +15,7 @@ class ProjectNoteController extends Controller
 
     public function __construct(ProjectNoteService $service)
     {
-        //        $this->repository = $repository;
-        //        $this->repositoryPresenter = $repository->setPresenter(ProjectNotePresenter::class);
         $this->service = $service;
-
         $this->middleware('check-project-permissions', ['except' => ['show', 'index']]);
     }
 
@@ -86,37 +78,4 @@ class ProjectNoteController extends Controller
     {
         return $this->service->delete($projectId, $id);
     }
-
-    //    public function index($id)
-    //    {
-    //        return $this->repositoryPresenter->findWhere(['project_id' => $id]);
-    //    }
-    //
-    //    public function store(Request $request, $id)
-    //    {
-    //        return $this->service->create($request->all() + ['project_id' => $id]);
-    //    }
-    //
-    //    public function show($id, $noteId)
-    //    {
-    //        try {
-    //            $notes = $this->repository->findWhere(['project_id' => $id, 'id' => $noteId]);
-    //
-    //            if (!isset($notes[0])) throw new ModelNotFoundException;
-    //
-    //            return $notes[0];
-    //        } catch (ModelNotFoundException $e) {
-    //            return ['status' => 'error', 'message' => 'Nota não encontrada.'];
-    //        }
-    //    }
-    //
-    //    public function update(Request $request, $id, $noteId)
-    //    {
-    //        return $this->service->update($request->all(), $noteId);
-    //    }
-    //
-    //    public function destroy($id, $noteId)
-    //    {
-    //        return $this->service->delete($noteId);
-    //    }
 }
