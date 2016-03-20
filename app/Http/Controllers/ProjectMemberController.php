@@ -2,17 +2,17 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Services\ProjectService;
+use CodeProject\Services\ProjectMemberService;
 use Illuminate\Http\Request;
 
 class ProjectMemberController extends Controller
 {
     /**
-     * @var ProjectService
+     * @var ProjectMemberService
      */
     private $service;
 
-    public function __construct(ProjectService $service)
+    public function __construct(ProjectMemberService $service)
     {
         $this->service = $service;
 

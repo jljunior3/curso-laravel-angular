@@ -37,7 +37,11 @@ class ClientService
     public function all($limit = null)
     {
         try {
-            return $this->repository->setPresenter($this->presenter)->paginate($limit);
+            $result = $this->repository->setPresenter($this->presenter)->paginate($limit);
+
+            //print_r($result); die;
+
+            return $result;
         } catch (\Exception $e) {
             return [
                 "error"      => true,

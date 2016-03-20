@@ -32,8 +32,8 @@ class ProjectNoteService
         ProjectNoteValidator $validator)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
         $this->presenter  = $presenter;
+        $this->validator  = $validator;
     }
 
     public function all($projectId)
@@ -52,15 +52,17 @@ class ProjectNoteService
     public function find($projectId, $id)
     {
         try {
-            $notes = $this->repository
+            $data = $this->repository
                 ->setPresenter($this->presenter)
                 ->findWhere(['project_id' => $projectId, 'id' => $id]);
 
-            if (isset($notes[0])) {
-                return $notes[0];
+            if (isset($data['data']) && count($data['data'])) {
+                return [
+                    'data' => current($data['data'])
+                ];
             }
 
-            return [];
+            return $data;
         } catch (\Exception $e) {
             return [
                 "error"      => true,

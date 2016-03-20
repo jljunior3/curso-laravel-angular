@@ -54,15 +54,17 @@ class ProjectTaskService
     public function find($projectId, $id)
     {
         try {
-            $tasks = (array)$this->repository
+            $data = (array)$this->repository
                 ->setPresenter($this->presenter)
                 ->findWhere(['project_id' => $projectId, 'id' => $id]);
 
-            if (isset($tasks[0])) {
-                return $tasks[0];
+            if (isset($data['data']) && count($data['data'])) {
+                return [
+                    'data' => current($data['data'])
+                ];
             }
 
-            return [];
+            return $data;
         } catch (\Exception $e) {
             return [
                 "error"      => true,

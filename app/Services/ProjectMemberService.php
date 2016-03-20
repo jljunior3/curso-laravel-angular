@@ -2,6 +2,7 @@
 
 namespace CodeProject\Services;
 
+use CodeProject\Presenters\ProjectMemberPresenter;
 use CodeProject\Repositories\ProjectMemberRepository;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectMemberValidator;
@@ -22,6 +23,11 @@ class ProjectMemberService
     private $memberRepository;
 
     /**
+     * @var ProjectMemberPresenter
+     */
+    private $memberPresenter;
+
+    /**
      * @var ProjectValidator
      */
 
@@ -29,17 +35,19 @@ class ProjectMemberService
 
     public function __construct(
         ProjectRepository $projectRepository, ProjectMemberRepository $memberRepository,
+        ProjectMemberPresenter $memberPresenter,
         ProjectMemberValidator $validator)
     {
         $this->projectRepository = $projectRepository;
         $this->memberRepository  = $memberRepository;
+        $this->memberPresenter   = $memberPresenter;
         $this->validator         = $validator;
     }
 
     public function getMembers($projectId)
     {
         try {
-            return $this->memberRepository->getMembers($projectId);
+            return $this->memberRepository->setPresenter($this->memberPresenter)->getMembers($projectId);
         } catch (\Exception $e) {
             return [
                 "error"      => true,
@@ -52,13 +60,18 @@ class ProjectMemberService
     public function getMember($projectId, $id)
     {
         try {
-            $members = $this->memberRepository->findWhere(['project_id' => $projectId, 'member_id' => $id]);
+            $data = $this->memberRepository
+                ->setPresenter($this->memberPresenter)
+                ->findWhere(['project_id' => $projectId, 'member_id' => $id]);
 
-            if (isset($members[0])) {
-                return $members[0];
+
+            if (isset($data['data']) && count($data['data'])) {
+                return [
+                    'data' => current($data['data'])
+                ];
             }
 
-            return [];
+            return $data;
         } catch (\Exception $e) {
             return [
                 "error"      => true,
@@ -76,7 +89,7 @@ class ProjectMemberService
 
             return [
                 'success' => $result,
-                "message" => 'Membro adicionado com sucesso.'
+                "message" => 'Adicionar membro ao projeto.'
             ];
         } catch (ValidatorException $e) {
             return [
@@ -87,7 +100,7 @@ class ProjectMemberService
         } catch (\Exception $e) {
             return [
                 "error"      => true,
-                "message"    => 'Falha ao adicionar membro.',
+                "message"    => 'Falha ao adicionar membro ao projeto.',
                 "messageDev" => $e->getMessage()
             ];
         }
@@ -97,14 +110,15 @@ class ProjectMemberService
     {
         try {
             $result = $this->projectRepository->removeMember($projectId, $memberId);
+
             return [
                 'success' => $result,
-                "message" => 'Membro removido com sucesso.'
+                "message" => 'Remover membro do projeto.'
             ];
         } catch (\Exception $e) {
             return [
-                "error"   => true,
-                "message" => 'Falha ao remover membro.',
+                "error"      => true,
+                "message"    => 'Falha ao remover membro do projeto.',
                 "messageDev" => $e->getMessage()
             ];
         }

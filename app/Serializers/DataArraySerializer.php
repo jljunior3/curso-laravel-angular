@@ -10,7 +10,7 @@ class DataArraySerializer extends ArraySerializer
      * Serialize a collection.
      *
      * @param string $resourceKey
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -23,7 +23,7 @@ class DataArraySerializer extends ArraySerializer
      * Serialize an item.
      *
      * @param string $resourceKey
-     * @param array  $data
+     * @param array $data
      *
      * @return array
      */

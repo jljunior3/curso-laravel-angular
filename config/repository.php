@@ -34,8 +34,8 @@ return [
         'params' => [
             'include' => 'include'
         ],
-        //'serializer' => League\Fractal\Serializer\DataArraySerializer::class
-        'serializer' => \CodeProject\Serializers\DataArraySerializer::class
+        'serializer' => League\Fractal\Serializer\DataArraySerializer::class
+        //'serializer' => \CodeProject\Serializers\DataArraySerializer::class
     ],
 
     /*

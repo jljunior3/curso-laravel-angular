@@ -9,6 +9,10 @@ angular.module('app.services')
                     id: '@id'
                 },
                 {
+                    query: {
+                        method: 'GET',
+                        isArray: false
+                    },
                     update: {
                         method: 'PUT'
                     }

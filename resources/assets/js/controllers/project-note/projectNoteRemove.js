@@ -2,23 +2,30 @@ angular.module('app.controllers')
     .controller('ProjectNoteRemoveController', [
         '$scope', '$location', '$routeParams', 'ProjectNote',
         function ($scope, $location, $routeParams, ProjectNote) {
-            var _projectId = $routeParams.projectId;
+            var projectId = $routeParams.projectId;
 
-            $scope.projectId = _projectId;
+            $scope.projectId = projectId;
 
-            $scope.projectNote = ProjectNote.get({
-                projectId: _projectId,
-                id: $routeParams.id
-            });
+            ProjectNote.get(
+                {
+                    projectId: projectId,
+                    id: $routeParams.id
+                },
+                function (res) {
+                    $scope.projectNote = res.data;
+                }
+            );
 
             $scope.remove = function () {
-                $scope.projectNote.$delete({
-                        projectId: _projectId,
+                ProjectNote.delete(
+                    {
+                        projectId: projectId,
                         id: $routeParams.id
-                    })
-                    .then(function () {
-                        $location.path('/project/' + _projectId + '/notes');
-                    });
+                    },
+                    function () {
+                        $location.path('/project/' + projectId + '/notes');
+                    }
+                );
             };
         }
     ]);

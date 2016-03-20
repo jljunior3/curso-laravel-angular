@@ -61,13 +61,15 @@ class ProjectFileService
     public function find($projectId, $id)
     {
         try {
-            $files = $this->repository->findWhere(['project_id' => $projectId, 'id' => $id]);
+            $data = $this->repository->findWhere(['project_id' => $projectId, 'id' => $id]);
 
-            if (isset($files[0])) {
-                return $files[0];
+            if (isset($data['data']) && count($data['data'])) {
+                return [
+                    'data' => current($data['data'])
+                ];
             }
 
-            return [];
+            return $data;
         } catch (\Exception $e) {
             return [
                 "error"      => true,
